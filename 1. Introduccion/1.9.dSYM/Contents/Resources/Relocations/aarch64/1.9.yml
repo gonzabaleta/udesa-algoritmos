@@ -1,0 +1,8 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/gonza/Documents/Gonza/UdeSA/Algoritmos/1. Introduccion/1.9'
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _ordenar, symObjAddr: 0x0, symBinAddr: 0x100003D98, symSize: 0xD4 }
+  - { offsetInCU: 0x41, offset: 0x41, size: 0x8, addend: 0x0, symName: _ordenar, symObjAddr: 0x0, symBinAddr: 0x100003D98, symSize: 0xD4 }
+  - { offsetInCU: 0xC7, offset: 0xC7, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0xD4, symBinAddr: 0x100003E6C, symSize: 0xE0 }
+...
