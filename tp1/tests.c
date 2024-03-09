@@ -185,7 +185,7 @@ bool test_array_of_array_copy()
       test_result &= copy[i][j] == array_of_arrays[i][j] * 2;
     }
   }
-  tests_result &= test_assert("COPY - Prueba copiar arreglo de arreglos", test_result);
+  tests_result &= test_assert("Prueba copiar arreglo de arreglos", test_result);
   // Limpio memoria de copia
   for (int i = 0; i < array_amount; i++)
   {
@@ -194,7 +194,7 @@ bool test_array_of_array_copy()
   free(copy);
 
   copy = copy_array_of_arrays(NULL, array_lengths, array_amount);
-  tests_result &= test_assert("COPY - Prueba copiar arreglo de arreglos nulo", !copy);
+  tests_result &= test_assert("Prueba copiar arreglo de arreglos nulo", !copy);
 
   test_result = true;
   free(array_of_arrays[2]);
@@ -219,7 +219,7 @@ bool test_array_of_array_copy()
     }
   }
   tests_result &= test_assert(
-      "COPY - Prueba copiar arreglo de arreglos que contiene nulo", test_result);
+      "Prueba copiar arreglo de arreglos que contiene nulo", test_result);
 
   // Limpio memoria
   for (int i = 0; i < array_amount; i++)

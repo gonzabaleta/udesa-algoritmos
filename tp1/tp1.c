@@ -85,7 +85,7 @@ int **copy_array_of_arrays(const int **array_of_arrays, const int *array_lenghts
 
     for (int i = 0; i < array_amount; i++)
     {
-        if (array_of_arrays[i] == NULL)
+        if (array_of_arrays[i] == NULL || array_lenghts[i] <= 0)
         {
             array_copy[i] = NULL;
             continue;
