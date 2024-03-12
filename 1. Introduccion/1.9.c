@@ -4,16 +4,17 @@ void ordenar(int *arr, int size)
 {
     for (int i = 0; i < size; i++)
     {
-        int min = arr[i];
+        int *min = &arr[i];
         for (int j = i; j < size; j++)
         {
-            if (arr[j] < min)
+            if (arr[j] < *min)
             {
-                min = arr[j];
+                min = &arr[j];
             }
         }
-
-        arr[i] = min;
+        int tmp = arr[i];
+        arr[i] = *min;
+        *min = tmp;
     }
 }
 
