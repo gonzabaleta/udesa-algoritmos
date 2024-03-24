@@ -39,3 +39,7 @@
 211:
 	gcc 2.11.c -g -std=c99 -Wall -Wconversion -Wno-sign-conversion -Werror -o 2.11
 	./2.11
+
+212:
+	gcc 2.12.c -g -std=c99 -Wall -Wconversion -Wno-sign-conversion -Werror -o 2.12
+	./2.12

@@ -16,7 +16,12 @@ bool search(int *arr, int len, int elem)
         return true;
     }
 
-    return search(arr, middle, elem) || search(arr + middle + 1, len, elem);
+    if (search(arr, middle, elem) || search(arr + middle, len - middle, elem))
+    {
+        return true;
+    };
+
+    return false;
 }
 
 int main()
@@ -32,5 +37,5 @@ int main()
                    9,
                    10};
 
-    printf("%s\n", search(arr, 10, 3) ? "true" : "false");
+    printf("%s\n", search(arr, 10, 11) ? "true" : "false");
 }
