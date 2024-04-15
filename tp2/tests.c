@@ -4,7 +4,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-bool test_create_and_destroy_list() {
+bool test_create_and_destroy_list()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -12,7 +13,8 @@ bool test_create_and_destroy_list() {
   return tests_result;
 }
 
-bool test_create_with_failed_malloc() {
+bool test_create_with_failed_malloc()
+{
   bool tests_result = true;
   set_malloc_status(false);
   list_t *list = list_new();
@@ -21,7 +23,8 @@ bool test_create_with_failed_malloc() {
   return tests_result;
 }
 
-bool test_empty_size_and_length() {
+bool test_empty_size_and_length()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -32,7 +35,8 @@ bool test_empty_size_and_length() {
   return tests_result;
 }
 
-bool test_insert_head_successfully() {
+bool test_insert_head_successfully()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -48,7 +52,8 @@ bool test_insert_head_successfully() {
   return tests_result;
 }
 
-bool test_insert_head_fails() {
+bool test_insert_head_fails()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -68,11 +73,13 @@ bool test_insert_head_fails() {
   return tests_result;
 }
 
-bool test_destroy_value() {
+bool test_destroy_value()
+{
   bool tests_result = true;
   bool insert_status = true;
   list_t *list = list_new();
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 100; i++)
+  {
     int *aux = malloc(sizeof(int));
     *aux = i;
     insert_status &= list_insert_head(list, aux);
@@ -84,7 +91,8 @@ bool test_destroy_value() {
   return tests_result;
 }
 
-bool test_insert_tail_successfully() {
+bool test_insert_tail_successfully()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -100,7 +108,8 @@ bool test_insert_tail_successfully() {
   return tests_result;
 }
 
-bool test_insert_tail_fails() {
+bool test_insert_tail_fails()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -120,13 +129,15 @@ bool test_insert_tail_fails() {
   return tests_result;
 }
 
-bool test_peek_head() {
+bool test_peek_head()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
   tests_result &= test_assert("EL valor de head es NULL con la lista vacia",
                               !list_peek_head(list));
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++)
+  {
     int *aux = malloc(sizeof(int));
     *aux = i;
     list_insert_head(list, aux);
@@ -137,13 +148,15 @@ bool test_peek_head() {
   return tests_result;
 }
 
-bool test_peek_tail() {
+bool test_peek_tail()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
   tests_result &= test_assert("EL valor de head es NULL con la lista vacia",
                               !list_peek_tail(list));
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++)
+  {
     int *aux = malloc(sizeof(int));
     *aux = i;
     list_insert_tail(list, aux);
@@ -154,7 +167,8 @@ bool test_peek_tail() {
   return tests_result;
 }
 
-bool test_pop_empty_list() {
+bool test_pop_empty_list()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -166,7 +180,8 @@ bool test_pop_empty_list() {
   return tests_result;
 }
 
-bool test_simple_pop_head() {
+bool test_simple_pop_head()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -198,7 +213,8 @@ bool test_simple_pop_head() {
   return tests_result;
 }
 
-bool test_simple_pop_tail() {
+bool test_simple_pop_tail()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -230,26 +246,34 @@ bool test_simple_pop_tail() {
   return tests_result;
 }
 
-bool test_multiple_peek() {
+bool test_multiple_peek()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++)
+  {
     int *aux = malloc(sizeof(int));
     *aux = i;
-    if (i % 2 == 0) {
+    if (i % 2 == 0)
+    {
       tests_result &= test_assert("Se inserto un número al principio",
                                   list_insert_head(list, aux));
       tests_result &= test_assert("El valor de head es el insertado",
                                   *((int *)list_peek_head(list)) == i);
-      if (list_length(list) > 1) {
+      if (list_length(list) > 1)
+      {
         tests_result &= test_assert("El valor de tail es correcto",
                                     *((int *)list_peek_tail(list)) == (i - 1));
-      } else {
+      }
+      else
+      {
         tests_result &= test_assert("El valor de tail es correcto",
                                     *((int *)list_peek_tail(list)) == i);
       }
-    } else {
+    }
+    else
+    {
       tests_result &= test_assert("Se inserto un número al final",
                                   list_insert_tail(list, aux));
       tests_result &= test_assert("El valor de head es correcto",
@@ -262,11 +286,13 @@ bool test_multiple_peek() {
   return tests_result;
 }
 
-bool test_multiple_pop() {
+bool test_multiple_pop()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 100; i++)
+  {
     int *aux = malloc(sizeof(int));
     *aux = i;
     list_insert_head(list, aux);
@@ -276,7 +302,8 @@ bool test_multiple_pop() {
   tests_result &=
       test_assert("El largo de la lista es 200", list_length(list) == 200);
 
-  for (int i = 99; i >= 0; i--) {
+  for (int i = 99; i >= 0; i--)
+  {
     int *aux = list_pop_head(list);
     tests_result &=
         test_assert("Eliminar el primer elemento funciona correctamente",
@@ -293,16 +320,19 @@ bool test_multiple_pop() {
   return tests_result;
 }
 
-bool test_multiple_pop_random_patterns() {
+bool test_multiple_pop_random_patterns()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 100; i++)
+  {
     int *aux = malloc(sizeof(int));
     *aux = i;
     list_insert_head(list, aux);
     list_insert_tail(list, aux);
-    switch (rand() % 4) {
+    switch (rand() % 4)
+    {
     case 0:
       list_insert_head(list, aux);
       list_insert_tail(list, aux);
@@ -352,7 +382,8 @@ bool test_multiple_pop_random_patterns() {
   tests_result &=
       test_assert("El largo de la lista es 200", list_length(list) == 200);
 
-  for (int i = 99; i >= 0; i--) {
+  for (int i = 99; i >= 0; i--)
+  {
     int *aux = list_pop_head(list);
     tests_result &=
         test_assert("Eliminar el primer elemento funciona correctamente",
@@ -369,15 +400,18 @@ bool test_multiple_pop_random_patterns() {
   return tests_result;
 }
 
-bool test_multiple_random_failed_operations() {
+bool test_multiple_random_failed_operations()
+{
   bool tests_result = true;
   list_t *list1 = list_new();
   tests_result &= test_assert("La lista 1 fue creada", list1 != NULL);
   list_t *list2 = list_new();
   tests_result &= test_assert("La lista 2 fue creada", list2 != NULL);
   int *aux = NULL, *aux2 = NULL;
-  for (int i = 0; i < 300; i++) {
-    switch (rand() % 12) {
+  for (int i = 0; i < 300; i++)
+  {
+    switch (rand() % 12)
+    {
     case 0: // insert head exitoso
       aux = malloc(sizeof(int));
       *aux = i;
@@ -398,13 +432,15 @@ bool test_multiple_random_failed_operations() {
       set_malloc_status(true);
     case 4: // pop head
       aux = list_pop_head(list1);
-      if (aux) {
+      if (aux)
+      {
         free(aux);
       }
       list_pop_head(list2);
     case 5: // pop tail
       aux = list_pop_tail(list1);
-      if (aux) {
+      if (aux)
+      {
         free(aux);
       }
       list_pop_tail(list2);
@@ -420,8 +456,10 @@ bool test_multiple_random_failed_operations() {
                         (list_peek_head(list1) == list_peek_head(list2)) &&
                         (list_peek_tail(list1) == list_peek_tail(list2)));
   }
-  for (int i = 0; i < list_length(list1) / 2; i++) {
-    switch (rand() % 6) {
+  for (int i = 0; i < list_length(list1) / 2; i++)
+  {
+    switch (rand() % 6)
+    {
     case 0:
       aux = list_pop_head(list1);
       aux2 = list_pop_head(list2);
@@ -441,7 +479,8 @@ bool test_multiple_random_failed_operations() {
   return tests_result;
 }
 
-bool test_iter_create_and_destroy() {
+bool test_iter_create_and_destroy()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -455,7 +494,8 @@ bool test_iter_create_and_destroy() {
   return tests_result;
 }
 
-bool test_iter_create_with_failed_malloc() {
+bool test_iter_create_with_failed_malloc()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -471,7 +511,8 @@ bool test_iter_create_with_failed_malloc() {
   return tests_result;
 }
 
-bool test_iter_empty_list_move_fails() {
+bool test_iter_empty_list_move_fails()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -493,7 +534,8 @@ bool test_iter_empty_list_move_fails() {
   return tests_result;
 }
 
-bool test_iter_one_element_list_move_fails() {
+bool test_iter_one_element_list_move_fails()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -517,7 +559,8 @@ bool test_iter_one_element_list_move_fails() {
   return tests_result;
 }
 
-bool test_iter_simple_move() {
+bool test_iter_simple_move()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -545,7 +588,8 @@ bool test_iter_simple_move() {
   return tests_result;
 }
 
-bool test_iter_peek_empty_list() {
+bool test_iter_peek_empty_list()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -558,7 +602,8 @@ bool test_iter_peek_empty_list() {
   return tests_result;
 }
 
-bool test_iter_move_and_peek() {
+bool test_iter_move_and_peek()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -587,7 +632,8 @@ bool test_iter_move_and_peek() {
   return tests_result;
 }
 
-bool test_iter_move_at_start_and_end() {
+bool test_iter_move_at_start_and_end()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -622,11 +668,13 @@ bool test_iter_move_at_start_and_end() {
   return tests_result;
 }
 
-bool test_iter_full_list_read_only() {
+bool test_iter_full_list_read_only()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
-  for (int i = 1; i <= 100; i++) {
+  for (int i = 1; i <= 100; i++)
+  {
     int *aux = malloc(sizeof(int));
     *aux = i;
     tests_result &= test_assert("Se inserto un elemento en la lista",
@@ -641,7 +689,8 @@ bool test_iter_full_list_read_only() {
   int i = 1;
   tests_result &= test_assert("El valor del actual del iterador es correcto",
                               *((int *)list_iter_peek_current(iter)) == i);
-  while (list_iter_forward(iter)) {
+  while (list_iter_forward(iter))
+  {
     i++;
     tests_result &= test_assert(
         "Se avanzo una posicion y el valor del actual del iterador es correcto",
@@ -654,7 +703,8 @@ bool test_iter_full_list_read_only() {
   i = 100;
   tests_result &= test_assert("El valor del actual del iterador es correcto",
                               *((int *)list_iter_peek_current(iter)) == i);
-  while (list_iter_backward(iter)) {
+  while (list_iter_backward(iter))
+  {
     i--;
     tests_result &= test_assert(
         "Se avanzo una posicion y el valor del actual del iterador es correcto",
@@ -669,13 +719,16 @@ bool test_iter_full_list_read_only() {
   return tests_result;
 }
 
-bool test_iter_move_on_random_list() {
+bool test_iter_move_on_random_list()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
   int *aux = NULL;
-  for (int i = 0; i < 300; i++) {
-    switch (rand() % 6) {
+  for (int i = 0; i < 300; i++)
+  {
+    switch (rand() % 6)
+    {
     case 0: // insert head exitoso
       aux = malloc(sizeof(int));
       *aux = i;
@@ -686,12 +739,14 @@ bool test_iter_move_on_random_list() {
       list_insert_tail(list, aux);
     case 2: // pop head
       aux = list_pop_head(list);
-      if (aux) {
+      if (aux)
+      {
         free(aux);
       }
     case 3: // pop tail
       aux = list_pop_tail(list);
-      if (aux) {
+      if (aux)
+      {
         free(aux);
       }
     default:
@@ -707,7 +762,8 @@ bool test_iter_move_on_random_list() {
   tests_result &=
       test_assert("El iterador esta al final", list_iter_at_last(iter));
   int cant = 1;
-  while (list_iter_backward(iter)) {
+  while (list_iter_backward(iter))
+  {
     cant++;
   }
   tests_result &=
@@ -722,7 +778,8 @@ bool test_iter_move_on_random_list() {
   return tests_result;
 }
 
-bool test_iter_insert_after_at_start() {
+bool test_iter_insert_after_at_start()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -775,7 +832,8 @@ bool test_iter_insert_after_at_start() {
   return tests_result;
 }
 
-bool test_iter_insert_after_at_start_fails() {
+bool test_iter_insert_after_at_start_fails()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -809,7 +867,8 @@ bool test_iter_insert_after_at_start_fails() {
   return tests_result;
 }
 
-bool test_iter_insert_after_at_middle() {
+bool test_iter_insert_after_at_middle()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -872,7 +931,8 @@ bool test_iter_insert_after_at_middle() {
   return tests_result;
 }
 
-bool test_iter_insert_after_at_tail() {
+bool test_iter_insert_after_at_tail()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -919,14 +979,17 @@ bool test_iter_insert_after_at_tail() {
   aux = list_pop_tail(list);
   tests_result &=
       test_assert("Se remueve el ultimo elemento y es un 4", *aux == 4);
+  printf("%d", *aux);
   free(aux);
   aux = list_pop_tail(list);
   tests_result &=
       test_assert("Se remueve el ultimo elemento y es un 3", *aux == 3);
+  printf("%d", *aux);
   free(aux);
   aux = list_pop_tail(list);
   tests_result &=
       test_assert("Se remueve el ultimo elemento y es un 2", *aux == 2);
+  printf("%d", *aux);
   free(aux);
   aux = list_pop_tail(list);
   tests_result &=
@@ -936,7 +999,8 @@ bool test_iter_insert_after_at_tail() {
   return tests_result;
 }
 
-bool test_iter_insert_before_at_end() {
+bool test_iter_insert_before_at_end()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -967,6 +1031,7 @@ bool test_iter_insert_before_at_end() {
   tests_result &= test_assert("El iterador avanzo", list_iter_forward(iter));
   tests_result &= test_assert("El elemento actual es 2",
                               *((int *)list_iter_peek_current(iter)) == 2);
+  printf("%d", *((int *)list_iter_peek_current(iter)));
   tests_result &= test_assert("El iterador avanzo", list_iter_forward(iter));
   tests_result &= test_assert("El elemento actual es 3",
                               *((int *)list_iter_peek_current(iter)) == 3);
@@ -990,7 +1055,8 @@ bool test_iter_insert_before_at_end() {
   return tests_result;
 }
 
-bool test_iter_insert_before_at_end_fails() {
+bool test_iter_insert_before_at_end_fails()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -1040,7 +1106,8 @@ bool test_iter_insert_before_at_end_fails() {
   return tests_result;
 }
 
-bool test_iter_insert_before_at_middle() {
+bool test_iter_insert_before_at_middle()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -1104,7 +1171,8 @@ bool test_iter_insert_before_at_middle() {
   return tests_result;
 }
 
-bool test_iter_insert_before_at_head() {
+bool test_iter_insert_before_at_head()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -1170,7 +1238,8 @@ bool test_iter_insert_before_at_head() {
   return tests_result;
 }
 
-bool test_iter_insert_empty_lists() {
+bool test_iter_insert_empty_lists()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -1235,7 +1304,8 @@ bool test_iter_insert_empty_lists() {
   return tests_result;
 }
 
-bool test_iter_delete_empty_list() {
+bool test_iter_delete_empty_list()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -1250,7 +1320,8 @@ bool test_iter_delete_empty_list() {
   return tests_result;
 }
 
-bool test_iter_delete_one_element_list() {
+bool test_iter_delete_one_element_list()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -1275,7 +1346,8 @@ bool test_iter_delete_one_element_list() {
   return tests_result;
 }
 
-bool test_iter_delete_head() {
+bool test_iter_delete_head()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -1337,7 +1409,8 @@ bool test_iter_delete_head() {
   return tests_result;
 }
 
-bool test_iter_delete_tail() {
+bool test_iter_delete_tail()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -1399,7 +1472,8 @@ bool test_iter_delete_tail() {
   return tests_result;
 }
 
-bool test_iter_delete_middle() {
+bool test_iter_delete_middle()
+{
   bool tests_result = true;
   list_t *list = list_new();
   tests_result &= test_assert("La lista fue creada", list != NULL);
@@ -1474,7 +1548,8 @@ bool test_iter_delete_middle() {
   return tests_result;
 }
 
-int main(void) {
+int main(void)
+{
   srand(42);
   int return_code = 0;
   return_code += !test_create_and_destroy_list();
@@ -1518,9 +1593,12 @@ int main(void) {
   return_code += !test_iter_delete_head();
   return_code += !test_iter_delete_tail();
   return_code += !test_iter_delete_middle();
-  if (return_code == 0) {
+  if (return_code == 0)
+  {
     printf("Todo ok!\n");
-  } else {
+  }
+  else
+  {
     printf("Error code is %d\n", return_code);
   }
 
