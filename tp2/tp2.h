@@ -8,6 +8,7 @@ struct list;
 typedef struct list list_t;
 struct iterator;
 typedef struct list_iter list_iter_t;
+typedef struct node node_t;
 
 /*
  * Crea una nueva lista.
@@ -169,5 +170,7 @@ bool list_iter_insert_before(list_iter_t *iter, void *value);
  * Devuelve el valor contenido por el eliminado, si la lista está vacia devuelve NULL.
  */
 void *list_iter_delete(list_iter_t *iter);
+
+void *create_node(void *value, node_t *next, node_t *prev);
 
 #endif
