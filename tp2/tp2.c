@@ -100,7 +100,7 @@ bool list_insert_tail(list_t *list, void *value)
 
 void *list_peek_head(const list_t *list)
 {
-    if (list->head)
+    if (list && list->head)
     {
         return list->head->value;
     }
@@ -109,7 +109,7 @@ void *list_peek_head(const list_t *list)
 
 void *list_peek_tail(const list_t *list)
 {
-    if (list->tail)
+    if (list && list->tail)
     {
         return list->tail->value;
     }
@@ -128,6 +128,10 @@ void *list_pop_head(list_t *list)
     {
         list->head->prev = NULL;
     }
+    else
+    {
+        list->tail = NULL;
+    }
     list->size--;
     return tmp->value;
 }
@@ -143,6 +147,10 @@ void *list_pop_tail(list_t *list)
     {
         list->tail->next = NULL;
     }
+    else
+    {
+        list->head = NULL;
+    }
 
     list->size--;
 
@@ -151,12 +159,17 @@ void *list_pop_tail(list_t *list)
 
 void list_destroy(list_t *list, void destroy_value(void *))
 {
+    if (list == NULL)
+        return;
     node_t *curr = list->tail;
-    while (curr != NULL)
+    if (destroy_value)
     {
-        node_t *prev = curr->prev;
-        destroy_value(curr);
-        curr = prev;
+        while (curr != NULL)
+        {
+            node_t *prev = curr->prev;
+            destroy_value(curr);
+            curr = prev;
+        }
     }
 
     free(list);
@@ -243,6 +256,7 @@ bool list_iter_insert_after(list_iter_t *iter, void *value)
         node->next = NULL;
         iter->list->head = node;
         iter->list->tail = node;
+        iter->curr = node;
     }
     else if (iter->curr == iter->list->tail)
     {
@@ -256,7 +270,6 @@ bool list_iter_insert_after(list_iter_t *iter, void *value)
         iter->curr->next->prev = node;
         iter->curr->next = node;
     }
-    iter->curr = node;
 
     return true;
 }
@@ -278,6 +291,7 @@ bool list_iter_insert_before(list_iter_t *iter, void *value)
         node->prev = NULL;
         iter->list->head = node;
         iter->list->tail = node;
+        iter->curr = node;
     }
     else if (iter->curr == iter->list->head)
     {
@@ -291,7 +305,7 @@ bool list_iter_insert_before(list_iter_t *iter, void *value)
         iter->curr->prev->next = node;
         iter->curr->prev = node;
     }
-    iter->curr = node;
+
     return true;
 }
 
@@ -315,6 +329,7 @@ void *list_iter_delete(list_iter_t *iter)
         iter->curr = iter->curr->prev;
     }
 
+    iter->list->size--;
     free(node);
     return value;
 }
