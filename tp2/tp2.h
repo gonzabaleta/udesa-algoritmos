@@ -173,4 +173,6 @@ void *list_iter_delete(list_iter_t *iter);
 
 void *create_node(void *value, node_t *next, node_t *prev);
 
+void link_node_in_list(list_t *list, node_t *node, node_t *next, node_t *prev);
+
 #endif

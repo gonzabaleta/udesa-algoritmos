@@ -54,17 +54,7 @@ bool list_insert_head(list_t *list, void *value)
     if (node == NULL)
         return false;
 
-    if (!list_is_empty(list))
-    {
-        list->head->prev = node;
-    }
-    else
-    {
-        list->tail = node;
-    }
-
-    list->head = node;
-    list->size++;
+    link_node_in_list(list, node, list->head, NULL);
     return true;
 }
 
@@ -74,17 +64,7 @@ bool list_insert_tail(list_t *list, void *value)
     if (node == NULL)
         return false;
 
-    if (!list_is_empty(list))
-    {
-        list->tail->next = node;
-    }
-    else
-    {
-        list->head = node;
-    }
-
-    list->tail = node;
-    list->size++;
+    link_node_in_list(list, node, NULL, list->tail);
     return true;
 }
 
@@ -155,22 +135,12 @@ void list_destroy(list_t *list, void destroy_value(void *))
     if (list == NULL)
         return;
 
-    node_t *curr = list->tail;
-
-    if (destroy_value)
+    while (!list_is_empty(list))
     {
-        while (curr != NULL)
-        {
-            node_t *prev = curr->prev;
-
-            if (curr->value != NULL)
-                destroy_value(curr->value);
-
-            destroy_value(curr);
-            curr = prev;
-        }
+        void *value = list_pop_head(list);
+        if (destroy_value)
+            destroy_value(value);
     }
-
     free(list);
 }
 
@@ -247,27 +217,18 @@ void list_iter_destroy(list_iter_t *iter)
 bool list_iter_insert_after(list_iter_t *iter, void *value)
 {
 
-    node_t *node = malloc(sizeof(node_t));
+    node_t *node = create_node(value, NULL, iter->curr);
     if (node == NULL)
-    {
         return false;
-    }
-
-    node->value = value;
-    node->prev = iter->curr;
 
     if (iter->curr == NULL)
     {
-        node->next = NULL;
-        iter->list->head = node;
-        iter->list->tail = node;
+        link_node_in_list(iter->list, node, NULL, NULL);
         iter->curr = node;
     }
-    else if (iter->curr == iter->list->tail)
+    else if (list_iter_at_last(iter))
     {
-        node->next = NULL;
-        iter->list->tail = node;
-        iter->curr->next = node;
+        link_node_in_list(iter->list, node, NULL, iter->curr);
     }
     else
     {
@@ -282,33 +243,24 @@ bool list_iter_insert_after(list_iter_t *iter, void *value)
 bool list_iter_insert_before(list_iter_t *iter, void *value)
 {
 
-    node_t *node = malloc(sizeof(node_t));
+    node_t *node = create_node(value, iter->curr, NULL);
     if (node == NULL)
     {
         return false;
     }
 
-    node->value = value;
-    node->next = iter->curr;
-
-    if (iter->curr == NULL)
+    if (list_is_empty(iter->list))
     {
-        node->prev = NULL;
-        iter->list->head = node;
-        iter->list->tail = node;
+        link_node_in_list(iter->list, node, NULL, NULL);
         iter->curr = node;
     }
-    else if (iter->curr == iter->list->head)
+    else if (list_iter_at_first(iter))
     {
-        node->prev = NULL;
-        iter->list->head = node;
-        iter->curr->prev = node;
+        link_node_in_list(iter->list, node, iter->curr, NULL);
     }
     else
     {
-        node->prev = iter->curr->prev;
-        iter->curr->prev->next = node;
-        iter->curr->prev = node;
+        link_node_in_list(iter->list, node, iter->curr, iter->curr->prev);
     }
 
     return true;
@@ -323,19 +275,19 @@ void *list_iter_delete(list_iter_t *iter)
     }
     void *value = node->value;
 
-    if (iter->curr == iter->list->head && iter->curr == iter->list->tail)
+    if (iter->list->size == 1)
     {
         iter->list->head = NULL;
         iter->list->tail = NULL;
         iter->curr = NULL;
     }
-    else if (iter->curr == iter->list->head)
+    else if (list_iter_at_first(iter))
     {
         iter->list->head = iter->curr->next;
         iter->list->head->prev = NULL;
         iter->curr = iter->curr->next;
     }
-    else if (iter->curr == iter->list->tail)
+    else if (list_iter_at_last(iter))
     {
         iter->list->tail = iter->curr->prev;
         iter->list->tail->next = NULL;
@@ -366,4 +318,25 @@ void *create_node(void *value, node_t *next, node_t *prev)
     node->next = next;
     node->prev = prev;
     return node;
+}
+
+void link_node_in_list(list_t *list, node_t *node, node_t *next, node_t *prev)
+{
+    if (prev)
+    {
+        prev->next = node;
+    }
+    else
+    {
+        list->head = node;
+    }
+    if (next)
+    {
+        next->prev = node;
+    }
+    else
+    {
+        list->tail = node;
+    }
+    list->size++;
 }
