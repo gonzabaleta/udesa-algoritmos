@@ -6,7 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool test_create_and_destroy_dict() {
+bool test_create_and_destroy_dict()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   dictionary_t *dict = dictionary_create(free);
@@ -15,7 +16,8 @@ bool test_create_and_destroy_dict() {
   return tests_result;
 }
 
-bool test_create_failed() {
+bool test_create_failed()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   set_malloc_status(false);
@@ -25,7 +27,8 @@ bool test_create_failed() {
   return tests_result;
 }
 
-bool test_create_dict_nodestroy() {
+bool test_create_dict_nodestroy()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   dictionary_t *dict = dictionary_create(NULL);
@@ -34,7 +37,8 @@ bool test_create_dict_nodestroy() {
   return tests_result;
 }
 
-bool test_put_malloc_fail() {
+bool test_put_malloc_fail()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   dictionary_t *dict = dictionary_create(NULL);
@@ -60,7 +64,8 @@ bool test_put_malloc_fail() {
   return tests_result;
 }
 
-bool test_put_size() {
+bool test_put_size()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   dictionary_t *dict = dictionary_create(NULL);
@@ -85,7 +90,8 @@ bool test_put_size() {
   return tests_result;
 }
 
-bool test_pop_get() {
+bool test_pop_get()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   dictionary_t *dict = dictionary_create(NULL);
@@ -108,7 +114,8 @@ bool test_pop_get() {
   return tests_result;
 }
 
-bool test_get_errcode() {
+bool test_get_errcode()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   dictionary_t *dict = dictionary_create(NULL);
@@ -127,11 +134,13 @@ bool test_get_errcode() {
   return tests_result;
 }
 
-bool test_put_get_delete_loop() {
+bool test_put_get_delete_loop()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   dictionary_t *dict = dictionary_create(free);
-  for (size_t i = 0; i < 5; i++) {
+  for (size_t i = 0; i < 5; i++)
+  {
     char *key = malloc(sizeof("key"));
     strcpy(key, "key");
     int *value0 = malloc(sizeof(int));
@@ -187,7 +196,8 @@ bool test_put_get_delete_loop() {
   return tests_result;
 }
 
-bool test_put_NULL() {
+bool test_put_NULL()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   dictionary_t *dict = dictionary_create(NULL);
@@ -201,7 +211,8 @@ bool test_put_NULL() {
   return tests_result;
 }
 
-bool test_insert_random_sequence(size_t n, unsigned int seed, bool delete) {
+bool test_insert_random_sequence(size_t n, unsigned int seed, bool delete)
+{
   printf("========== %s (n=%lu, seed=%u, delete=%s) ==========\n",
          __PRETTY_FUNCTION__, n, seed, delete ? "true" : "false");
   srand(seed);
@@ -213,7 +224,8 @@ bool test_insert_random_sequence(size_t n, unsigned int seed, bool delete) {
   bool insert = true;
   bool size_correct = true;
   size_t uniques = 0;
-  for (size_t i = 0; i < n; i++) {
+  for (size_t i = 0; i < n; i++)
+  {
     int random_number = rand();
     int length = snprintf(NULL, 0, "%d", random_number);
     char *str = malloc(length + 1);
@@ -222,7 +234,8 @@ bool test_insert_random_sequence(size_t n, unsigned int seed, bool delete) {
     *random_number_copy = random_number;
     // Puede haber claves que se repitan en la secuencia
     uniques += !dictionary_contains(dict, str);
-    if (dictionary_contains(dict, str)) {
+    if (dictionary_contains(dict, str))
+    {
       repeat_arr_size += 1;
       repeats = realloc(repeats, repeat_arr_size * sizeof(int));
       repeats[repeat_arr_size - 1] = random_number;
@@ -239,9 +252,11 @@ bool test_insert_random_sequence(size_t n, unsigned int seed, bool delete) {
   bool correct = true;
   size_t rep_idx = 0;
 
-  for (size_t i = 0; i < n; i++) {
+  for (size_t i = 0; i < n; i++)
+  {
     int random_number = rand();
-    if (random_number == repeats[rep_idx]) {
+    if (random_number == repeats[rep_idx])
+    {
       rep_idx += 1;
       continue;
     }
@@ -258,19 +273,25 @@ bool test_insert_random_sequence(size_t n, unsigned int seed, bool delete) {
   tests_result &= test_assert("Todas las claves están presentes", contains);
   tests_result &= test_assert("Todos los valores son correctos", correct);
 
-  if (delete) {
+  if (delete)
+  {
     srand(seed);
     bool delete_ok = true;
     bool delete_size_ok = true;
     rep_idx = 0;
     bool first_pass = true;
 
-    for (size_t i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++)
+    {
       int random_number = rand();
-      if (repeats[rep_idx] == random_number) {
-        if (first_pass) {
+      if (repeats[rep_idx] == random_number)
+      {
+        if (first_pass)
+        {
           first_pass = false;
-        } else {
+        }
+        else
+        {
           printf("Found the %lu-th repeated number\n", rep_idx);
           rep_idx += 1;
           continue;
@@ -280,13 +301,15 @@ bool test_insert_random_sequence(size_t n, unsigned int seed, bool delete) {
       char *str = malloc(length + 1);
       snprintf(str, length + 1, "%d", random_number);
       bool this_delete_ok = dictionary_delete(dict, str);
-      if (!this_delete_ok) {
+      if (!this_delete_ok)
+      {
         printf("No se pudo eliminar la clave %s\n", str);
       }
       delete_ok &= this_delete_ok;
       bool this_delete_size_ok =
           dictionary_size(dict) == (uniques - i - 1 + rep_idx);
-      if (!this_delete_size_ok) {
+      if (!this_delete_size_ok)
+      {
         printf("El tamaño luego de borrar es erróneo: se esperaban %lu pero "
                "hay %lu (%lu)\n",
                uniques - i - 1 + rep_idx, dictionary_size(dict), rep_idx);
@@ -305,7 +328,8 @@ bool test_insert_random_sequence(size_t n, unsigned int seed, bool delete) {
   return tests_result;
 }
 
-bool test_malloc_fail_create() {
+bool test_malloc_fail_create()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   set_malloc_status(false);
@@ -316,7 +340,8 @@ bool test_malloc_fail_create() {
   return tests_result;
 }
 
-bool test_fail_insert() {
+bool test_fail_insert()
+{
   printf("========== %s ==========\n", __PRETTY_FUNCTION__);
   bool tests_result = true;
   set_malloc_status(true);
@@ -330,7 +355,8 @@ bool test_fail_insert() {
   return tests_result;
 }
 
-int main(void) {
+int main(void)
+{
   srand(117);
   int return_code = 0;
   return_code += !test_create_and_destroy_dict();
@@ -351,9 +377,12 @@ int main(void) {
   return_code += !test_insert_random_sequence(1048576, 117, false);
   return_code += !test_malloc_fail_create();
   return_code += !test_fail_insert();
-  if (return_code == 0) {
+  if (return_code == 0)
+  {
     printf("Todo ok!\n");
-  } else {
+  }
+  else
+  {
     printf("Error code is %d\n", return_code);
   }
   return return_code;

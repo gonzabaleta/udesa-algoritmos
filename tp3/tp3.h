@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #ifndef TP3_H
 #define TP3_H
@@ -8,6 +9,7 @@ struct dictionary;
 
 typedef struct dictionary dictionary_t;
 typedef void (*destroy_f)(void *);
+typedef struct Node Node;
 
 /* Crea un nuevo diccionario */
 dictionary_t *dictionary_create(destroy_f destroy);
@@ -51,7 +53,7 @@ bool dictionary_delete(dictionary_t *dictionary, const char *key);
  * - Si la calve está presente, retorna el valor asocaido y err debe ser false
  * - De otro modo, debe retornar NULL y err debe ser true
  */
-void *dictionary_pop(dictionary_t* dictionary, const char *key, bool *err);
+void *dictionary_pop(dictionary_t *dictionary, const char *key, bool *err);
 
 /* Indica si hay un valor asociado a la clave indicada. O(1).
  * Pre-condiciones:
@@ -74,5 +76,19 @@ size_t dictionary_size(dictionary_t *dictionary);
  * - El diccionario existe
  */
 void dictionary_destroy(dictionary_t *dictionary);
+
+/* CUSTOM FUNCTIONS */
+
+/* Devuelve el nodo correspondiente al key */
+Node *dictionary_get_node(dictionary_t *dictionary, const char *key);
+
+/* Función de hash basada en MurMurHash */
+uint32_t hash(const char *key, int len, uint32_t seed);
+
+/* Hace del diccionario (duplica la cantidad de buckets y vuelve a aplicar el hash a todos los elementos) */
+bool dictionary_rehash(dictionary_t *dictionary);
+
+/* Dado un key y un degree (cantidad de buckets) devuelve el bucket correspondiente al key */
+size_t get_bucket(const char *key, size_t degree);
 
 #endif
