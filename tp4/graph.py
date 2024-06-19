@@ -1,5 +1,6 @@
 from typing import Optional, Any, List
 from collections import deque
+import math
 
 
 class Graph:
@@ -132,24 +133,27 @@ class Graph:
                     queue.append(u)
         return len(visited)
 
-    def dfs(self, vertex: str, func):
+    def floyd_warshall(self) -> dict[tuple[str, str], float]:
         """
-        Performs a BFS on the graph starting from the desired vertex.
-        Returns the number of nodes visited
-        :param vertex: the name of the vertex from which to start the BFS
-        :param func: the function to apply to each node
-        :return: integer
+        Implementation of the Floyd-Warshall algorithm
+        :return: A dictionary with the shortest path distances between all pairs of vertices
         """
-        stack = [vertex]
-        visited = set()
-        visited.add(vertex)
+        vertices = self.get_vertices()
+        dist = {(i, j): math.inf for i in vertices for j in vertices}
 
-        while stack:
-            v = stack.pop()
-            func(v)
+        for v in vertices:
+            dist[(v, v)] = 0
 
-            for u in self.get_neighbors(v):
-                if u not in visited:
-                    visited.add(u)
-                    stack.append(u)
-        return len(visited)
+        for v in vertices:
+            for neighbor, weight in self._graph[v]["neighbors"].items():
+                dist[(v, neighbor)] = (
+                    weight if weight is not None else 1
+                )  # assuming default weight of 1 if none
+
+        for k in vertices:
+            for i in vertices:
+                for j in vertices:
+                    if dist[(i, j)] > dist[(i, k)] + dist[(k, j)]:
+                        dist[(i, j)] = dist[(i, k)] + dist[(k, j)]
+
+        return dist
