@@ -40,7 +40,7 @@ print(f"1. b. Tamaño de la componente más grande: {max(component_lengths)}")
 # Punto 2
 
 # Obtener los primeros 5000 vértices del grafo
-vertices = page_graph.get_vertices()[:1000]
+vertices = page_graph.get_vertices()[:5000]
 
 # Crear un subgrafo con los primeros 5000 vértices
 subgraph = Graph()
@@ -56,7 +56,7 @@ for vertex in vertices:
 
 # Medir el tiempo de ejecución de la función floyd_warshall
 start_time = time.time()
-result = subgraph.floyd_warshall()
+result = subgraph.get_all_min_paths()
 end_time = time.time()
 
 # Imprimir el resultado de floyd_warshall

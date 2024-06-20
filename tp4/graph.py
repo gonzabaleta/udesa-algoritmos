@@ -133,27 +133,32 @@ class Graph:
                     queue.append(u)
         return len(visited)
 
-    def floyd_warshall(self) -> dict[tuple[str, str], float]:
+    def bfs_shortest_path(self, start_vertex: str) -> dict[str, int]:
         """
-        Implementation of the Floyd-Warshall algorithm
-        :return: A dictionary with the shortest path distances between all pairs of vertices
+        Finds the shortest path from start_vertex to all other vertices
+        :param start_vertex: the vertex from which to start the BFS
+        :return: a dictionary with the shortest path to all other vertices
         """
-        vertices = self.get_vertices()
-        dist = {(i, j): math.inf for i in vertices for j in vertices}
+        distances = {vertex: math.inf for vertex in self._graph}
+        distances[start_vertex] = 0
+        queue = deque([start_vertex])
 
-        for v in vertices:
-            dist[(v, v)] = 0
+        while queue:
+            current_vertex = queue.popleft()
 
-        for v in vertices:
-            for neighbor, weight in self._graph[v]["neighbors"].items():
-                dist[(v, neighbor)] = (
-                    weight if weight is not None else 1
-                )  # assuming default weight of 1 if none
+            for neighbor in self.get_neighbors(current_vertex):
+                if distances[neighbor] == math.inf:  # if not visited
+                    distances[neighbor] = distances[current_vertex] + 1
+                    queue.append(neighbor)
 
-        for k in vertices:
-            for i in vertices:
-                for j in vertices:
-                    if dist[(i, j)] > dist[(i, k)] + dist[(k, j)]:
-                        dist[(i, j)] = dist[(i, k)] + dist[(k, j)]
+        return distances
 
-        return dist
+    def get_all_min_paths(self) -> dict[str, dict[str, int]]:
+        """
+        Computes the shortest path from every vertex to every other vertex
+        :return: a dictionary with all shortest paths between any pair of nodes
+        """
+        all_paths = {}
+        for vertex in self.get_vertices():
+            all_paths[vertex] = self.bfs_shortest_path(vertex)
+        return all_paths
