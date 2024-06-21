@@ -112,13 +112,13 @@ class Graph:
 
         return undirected_graph
 
-    def bfs(self, vertex: str, func):
+    def bfs(self, vertex: str, func) -> int:
         """
         Performs a BFS on the graph starting from the desired vertex.
         Returns the number of nodes visited
         :param vertex: the name of the vertex from which to start the BFS
         :param func: the function to apply to each node
-        :return: integer
+        :return: amount of nodes visited
         """
         queue = deque([vertex])
         visited = set()
@@ -134,7 +134,13 @@ class Graph:
                     queue.append(u)
         return len(visited)
 
-    def get_subgraph(self, n_vertices):
+    def get_subgraph(self, n_vertices: int) -> "Graph":
+        """
+        Returns a subgraph with the first n vertices of the graph
+        :param n_vertices: the number of vertices to include in the subgraph
+        :return: a subgraph with the first n vertices of the graph
+        """
+
         # Obtener los primeros n vértices del grafo
         vertices = self.get_vertices()[:n_vertices]
 
@@ -151,7 +157,7 @@ class Graph:
                     )
         return subgraph
 
-    def bfs_shortest_path(self, start_vertex: str) -> dict[str, int]:
+    def get_all_shortest_paths_from(self, start_vertex: str) -> dict[str, int]:
         """
         Finds the shortest path from start_vertex to all other vertices
         :param start_vertex: the vertex from which to start the BFS
@@ -178,40 +184,131 @@ class Graph:
         """
         all_paths = {}
         for vertex in self.get_vertices():
-            all_paths[vertex] = self.bfs_shortest_path(vertex)
+            all_paths[vertex] = self.get_all_shortest_paths_from(vertex)
         return all_paths
 
     def get_triangles_amount(self):
+        """
+        Calculates the number of triangles in the graph
+        :return: the number of triangles in the graph
+        """
         triangles = set()
         for i in self.get_vertices():
             for j in self.get_neighbors(i):
                 for k in self.get_neighbors(j):
+                    # Store the current potential triangle as a tuple with the vertices sorted
                     triangle = tuple(sorted((i, j, k)))
-                    if i in self.get_neighbors(j) and triangle not in triangles:
+                    is_triangle = i in self.get_neighbors(k) and k != i
+
+                    # If we haven't already counted this triangle, and it is a triangle indeed, add it to the set
+                    if is_triangle and triangle not in triangles:
                         triangles.add(triangle)
+
         return len(triangles)
 
-    def page_rank(self, num_walks: int, walk_length: int) -> dict:
+    def page_rank(self, n_walks: int, walk_length: int) -> dict:
         """
-        Calculates the PageRank of the vertices of the graph
+        Calculates the PageRank for all of the vertices in the graph
         :param num_walks: the number of walks to perform
         :param walk_length: the length of the walk
-        :return: the PageRank of the vertices
+        :return: a dictionary with the first 10 vertices with the highest PageRank
         """
-        vertices = list(self._graph.keys())
-        rank = {vertex: 0 for vertex in vertices}
+        num_visits = {}
 
-        for _ in range(num_walks):
-            current_vertex = np.random.choice(vertices)
+        for _ in range(n_walks):
+            current_vertex = np.random.choice(self.get_vertices())
             for _ in range(walk_length):
-                rank[current_vertex] += 1
+                if current_vertex not in num_visits:
+                    num_visits[current_vertex] = 0
+                num_visits[current_vertex] += 1
                 neighbors = self.get_neighbors(current_vertex)
                 if not neighbors:
                     break
                 current_vertex = np.random.choice(neighbors)
 
-        total_visits = sum(rank.values())
+        total_visits = sum(num_visits.values())
+        ranks = {}
         if total_visits > 0:
-            rank = {vertex: visits / total_visits for vertex, visits in rank.items()}
+            ranks = {
+                vertex: visits / total_visits for vertex, visits in num_visits.items()
+            }
 
-        return sorted(rank.items(), key=lambda x: x[1], reverse=True)[:10]
+        return sorted(ranks.items(), key=lambda x: x[1], reverse=True)[:10]
+
+    def max_cycle_length_from(self, start_vertex: str) -> int:
+        """
+        Calculates the length of the longest cycle starting from a vertex by performing DFS
+        :param start_vertex: the vertex from which to start the search
+        :return: the length of the longest cycle starting from the vertex
+        """
+
+        # For each node, we store the current node, the parent node and the depth
+        stack = [(start_vertex, None, 0)]
+        visited = set()
+        depth_dict = {}
+        max_cycle_length = 0
+
+        while stack:
+            current, parent, depth = stack.pop()
+
+            if current not in visited:
+                visited.add(current)
+                depth_dict[current] = depth
+
+                for neighbor in self.get_neighbors(current):
+                    if neighbor != parent:
+                        if neighbor not in visited:
+                            stack.append((neighbor, current, depth + 1))
+
+                        # If we have already visited the neighbord, we found a cycle
+                        else:
+                            cycle_length = depth - depth_dict[neighbor] + 1
+                            max_cycle_length = max(max_cycle_length, cycle_length)
+
+        return max_cycle_length
+
+    def find_longest_cycle(self, n_sample: int) -> int:
+        """
+        Finds the longest cycle in the graph
+        :param n_sample: the number of vertices to sample
+        :return: the length of the longest cycle in the graph
+        """
+
+        max_cycle_length = 0
+        for vertex in self.get_subgraph(n_sample).get_vertices():
+            max_cycle_length = max(max_cycle_length, self.max_cycle_length_from(vertex))
+
+        return max_cycle_length
+
+    def clustering_coefficient(self, vertex: str) -> float:
+        """
+        Calculates the clustering coefficient of a vertex using the formula 2E_i / k_i(k_i - 1) with:
+        E_i = number of edges between the neighbors of the vertex
+        k_i = number of neighbors of the vertex
+
+        :param vertex: the vertex to calculate the clustering coefficient
+        :return: the clustering coefficient of the vertex
+        """
+        neighbors = self.get_neighbors(vertex)
+        k_i = len(neighbors)
+
+        if k_i <= 1:
+            return 0
+
+        edge_count = 0
+        for i in range(k_i):
+            for j in range(i + 1, k_i):
+                if self.edge_exists(neighbors[i], neighbors[j]):
+                    edge_count += 1
+
+        return (2 * edge_count) / (k_i * (k_i - 1))
+
+    def average_clustering_coefficient(self) -> float:
+        """
+        Returns the average clustering coefficient of the graph
+        """
+        clustering_coefficients = []
+        for vertex in self.get_vertices():
+            clustering_coefficients.append(self.clustering_coefficient(vertex))
+
+        return np.mean(clustering_coefficients)
