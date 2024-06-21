@@ -1,5 +1,6 @@
 from typing import Optional, Any, List
 from collections import deque
+import numpy as np
 import math
 
 
@@ -133,6 +134,23 @@ class Graph:
                     queue.append(u)
         return len(visited)
 
+    def get_subgraph(self, n_vertices):
+        # Obtener los primeros n vértices del grafo
+        vertices = self.get_vertices()[:n_vertices]
+
+        # Crear un subgrafo con los primeros 5000 vértices
+        subgraph = Graph()
+        for vertex in vertices:
+            subgraph.add_vertex(vertex, self.get_vertex_data(vertex))
+
+        for vertex in vertices:
+            for neighbor in self.get_neighbors(vertex):
+                if neighbor in vertices:
+                    subgraph.add_edge(
+                        vertex, neighbor, self.get_edge_data(vertex, neighbor)
+                    )
+        return subgraph
+
     def bfs_shortest_path(self, start_vertex: str) -> dict[str, int]:
         """
         Finds the shortest path from start_vertex to all other vertices
@@ -156,9 +174,44 @@ class Graph:
     def get_all_min_paths(self) -> dict[str, dict[str, int]]:
         """
         Computes the shortest path from every vertex to every other vertex
-        :return: a dictionary with all shortest paths between any pair of nodes
+        :return: a dictionary with the lengths of all the shortest paths between any pair of nodes
         """
         all_paths = {}
         for vertex in self.get_vertices():
             all_paths[vertex] = self.bfs_shortest_path(vertex)
         return all_paths
+
+    def get_triangles_amount(self):
+        triangles = set()
+        for i in self.get_vertices():
+            for j in self.get_neighbors(i):
+                for k in self.get_neighbors(j):
+                    triangle = tuple(sorted((i, j, k)))
+                    if i in self.get_neighbors(j) and triangle not in triangles:
+                        triangles.add(triangle)
+        return len(triangles)
+
+    def page_rank(self, num_walks: int, walk_length: int) -> dict:
+        """
+        Calculates the PageRank of the vertices of the graph
+        :param num_walks: the number of walks to perform
+        :param walk_length: the length of the walk
+        :return: the PageRank of the vertices
+        """
+        vertices = list(self._graph.keys())
+        rank = {vertex: 0 for vertex in vertices}
+
+        for _ in range(num_walks):
+            current_vertex = np.random.choice(vertices)
+            for _ in range(walk_length):
+                rank[current_vertex] += 1
+                neighbors = self.get_neighbors(current_vertex)
+                if not neighbors:
+                    break
+                current_vertex = np.random.choice(neighbors)
+
+        total_visits = sum(rank.values())
+        if total_visits > 0:
+            rank = {vertex: visits / total_visits for vertex, visits in rank.items()}
+
+        return sorted(rank.items(), key=lambda x: x[1], reverse=True)[:10]

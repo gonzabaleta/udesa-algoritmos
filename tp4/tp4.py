@@ -20,13 +20,11 @@ with open(SOURCE_BIG, "r") as file:
         page_graph.add_edge(str(edge[0]), str(edge[1]))
 
 
-# Punto 1
+# Punto 1: ¿Cuál es el tamaño de la componente conexa más grande? ¿Cuántas componentes conexas hay?
 undirected_graph = page_graph.get_undirected_graph()
 
 visited = set()
 component_lengths = []
-
-print("CANT VERTICES:", len(page_graph.get_vertices()))
 
 for node in undirected_graph.get_vertices():
     if node in visited:
@@ -37,50 +35,50 @@ print(f"1. a. Cantidad de componentes conexas: {len(component_lengths)}")
 print(f"1. b. Tamaño de la componente más grande: {max(component_lengths)}")
 
 
-# Punto 2
+# Punto 2: Calcular el camino mínimo de todos con todos. ¿En cuanto tiempo lo puede hacer? ¿Qué orden tiene el algoritmo? En caso de no alcanzarle el tiempo, estime cuanto tiempo le llevaría.
+graph20000 = page_graph.get_subgraph(20000)
+graph10000 = page_graph.get_subgraph(10000)
+graph5000 = graph10000.get_subgraph(5000)
+graph1000 = graph5000.get_subgraph(1000)
+graph100 = graph1000.get_subgraph(100)
 
-# Obtener los primeros 5000 vértices del grafo
-vertices = page_graph.get_vertices()[:5000]
 
-# Crear un subgrafo con los primeros 5000 vértices
-subgraph = Graph()
-for vertex in vertices:
-    subgraph.add_vertex(vertex, page_graph.get_vertex_data(vertex))
+def calculate_execution_time(func):
+    start_time = time.time()
+    func()
+    end_time = time.time()
+    return end_time - start_time
 
-for vertex in vertices:
-    for neighbor in page_graph.get_neighbors(vertex):
-        if neighbor in vertices:
-            subgraph.add_edge(
-                vertex, neighbor, page_graph.get_edge_data(vertex, neighbor)
-            )
 
-# Medir el tiempo de ejecución de la función floyd_warshall
-start_time = time.time()
-result = subgraph.get_all_min_paths()
-end_time = time.time()
+# Medimos el tiempo de ejecucion para cada tamaño
+print(
+    f"Tiempo de ejecución con 100 vértices: {calculate_execution_time(graph100.get_all_min_paths)}"
+)
 
-# Imprimir el resultado de floyd_warshall
-print(result)
+print(
+    f"Tiempo de ejecución con 1000 vértices: {calculate_execution_time(graph1000.get_all_min_paths)}"
+)
+print(
+    f"Tiempo de ejecución con 5.000 vértices: {calculate_execution_time(graph5000.get_all_min_paths)}"
+)
+print(
+    f"Tiempo de ejecución con 10.000 vértices: {calculate_execution_time(graph10000.get_all_min_paths)}"
+)
 
-# Calcular e imprimir el tiempo de ejecución
-execution_time = end_time - start_time
-print(f"El tiempo de ejecución de floyd_warshall es: {execution_time} segundos")
+# print(f"Tiempo de ejecución con 20.000 vértices: {calculate_execution_time(graph20000.get_all_min_paths)}")
 
-# Imprimir el resultado de floyd_warshall
-print(result)
-
-# Calcular e imprimir el tiempo de ejecución
-execution_time = end_time - start_time
-print(f"El tiempo de ejecución de floyd_warshall es: {execution_time} segundos")
-
+# Tiempo de ejecución con 100 vértices: 0.0033490657806396484
+# Tiempo de ejecución con 1000 vértices: 0.07987689971923828
+# Tiempo de ejecución con 5.000 vértices: 1.3014400005340576
+# Tiempo de ejecución con 10.000 vértices: 5.524548053741455
+# Tiempo de ejecución con 20.000 vértices: 80.74490022659302
 
 # Punto 3
-triangles = set()
-for i in page_graph.get_vertices():
-    for j in page_graph.get_neighbors(i):
-        for k in page_graph.get_neighbors(j):
-            triangle = tuple(sorted((i, j, k)))
-            if i in page_graph.get_neighbors(j) and triangle not in triangles:
-                triangles.add(triangle)
+# print(f"3. Cantidad de triangulos: {page_graph.get_triangles_amount()}")
 
-print(f"3. Cantidad de triangulos: {len(triangles)}")
+# Punto 4
+print(f"Diámetro del grafo: {max(graph5000.get_all_min_paths())}")
+
+# Punto 5
+print("PAGE RANK!")
+print(page_graph.page_rank(1000, 100)[:20])
