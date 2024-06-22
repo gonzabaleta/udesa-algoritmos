@@ -1,6 +1,6 @@
-from graph import Graph
 from time import time
 import numpy as np
+from graph import Graph
 
 page_graph = Graph()
 
@@ -67,7 +67,7 @@ def punto2():
     """
     print_punto_title(2)
 
-    # Since the running time is cubic, we calculate the paths for the first 10000 vertices
+    # Since the running time is cubic, we calculate the paths only for the first 10000 vertices
     min_paths, time_min_paths = calculate_execution_time(
         page_graph.get_subgraph(10000).get_all_min_paths
     )
@@ -76,7 +76,8 @@ def punto2():
         f"Tiempo de ejecución de los caminos mínimos para 10000 vértices: {time_min_paths} segundos"
     )
 
-    # For estimating the time for all vertices, we calculate the time it takes for N single vertices, take the average, and then multiply by the total amount of vertices
+    # For estimating the time for all vertices, we calculate the time it takes for N single
+    # vertices, take the average, and then multiply by the total amount of vertices
     times = []
     samples = 100
     for _ in range(samples):
@@ -89,7 +90,7 @@ def punto2():
     estimated_time = np.mean(times) * VERTICES_AMOUNT
 
     print(
-        f"Tiempo estimado para {VERTICES_AMOUNT} vértices: {estimated_time / 60 / 60} horas"
+        f"Tiempo estimado para {VERTICES_AMOUNT} vértices: {round(estimated_time / 60 / 60, 2)} horas"
     )
 
     return min_paths
@@ -99,7 +100,12 @@ def punto3():
     """
     ¿Cuántos triángulos tiene el grafo?
     """
-    print(f"Cantidad de triangulos: {page_graph.get_triangles_amount()}")
+    print_punto_title(3)
+    triangles, time_triangles = calculate_execution_time(
+        page_graph.get_triangles_amount
+    )
+    print(f"Cantidad de triángulos: {triangles}")
+    print(f"Tiempo para calcular triángulos: {round(time_triangles,2)} segundos")
 
 
 def punto4(all_paths):
@@ -107,7 +113,10 @@ def punto4(all_paths):
     Utilice el punto 2 para calcular el diámetro del grafo.
     """
     print_punto_title(4)
-    print(f"Diámetro del grafo: {max(all_paths)}")
+    print(
+        "Estimamos el diámetro del grafo basado en los caminos mínimos calculados para un subgrafo de 10.000 vértices."
+    )
+    print(f"Estimación del diámetro del grafo: {max(all_paths)}")
 
 
 def punto5():
@@ -118,8 +127,8 @@ def punto5():
     page_rank, time_page_rank = calculate_execution_time(
         lambda: page_graph.page_rank(1000, 100)
     )
-    print(f"Tiempo de ejecución de PageRank: {time_page_rank} segundos")
     print("PageRank de los 10 vértices más altos: ", page_rank)
+    print(f"Tiempo de ejecución de PageRank: {round(time_page_rank, 2)} segundos")
 
 
 def punto6():
@@ -129,10 +138,12 @@ def punto6():
     """
     print_punto_title(6)
     circunference, time_circunference = calculate_execution_time(
-        lambda: page_graph.find_longest_cycle(50)
+        lambda: page_graph.find_longest_cycle(100)
     )
-    print("Circunferencia del grafo: ", circunference)
-    print("Tiempo de ejecución de la circunferencia: ", time_circunference)
+    print("Estimación de la circunferencia del grafo: ", circunference)
+    print(
+        f"Tiempo de ejecución de la circunferencia: {round(time_circunference, 2)} segundos"
+    )
 
 
 def punto_extra2():
@@ -140,13 +151,19 @@ def punto_extra2():
     Calcule el coeficiente de clustering del grafo
     """
     print_punto_title("EXTRA 2")
-    print(f"Coeficiente de clustering: {page_graph.average_clustering_coefficient()}")
+    clustering_coefficient, time_clustering_coefficient = calculate_execution_time(
+        page_graph.average_clustering_coefficient
+    )
+    print(f"Coeficiente de clustering promedio: {clustering_coefficient}")
+    print(
+        f"Tiempo de ejecución del coeficiente de clustering: {round(time_clustering_coefficient, 2)} segundos"
+    )
 
 
-# punto1()
+punto1()
 paths = punto2()
-# punto3()
-# punto4(paths)
-# punto5()
-# punto6()
-# punto_extra2()
+punto3()
+punto4(paths)
+punto5()
+punto6()
+punto_extra2()

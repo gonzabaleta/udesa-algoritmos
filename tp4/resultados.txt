@@ -1,0 +1,29 @@
+----- PUNTO 1 -----
+Cantidad de componentes conexas: 2746
+Tamaño de la componente más grande: 855802
+
+----- PUNTO 2 -----
+Tiempo de ejecución de los caminos mínimos para 10000 vértices: 5.101974010467529 segundos
+Tiempo estimado para 875713 vértices: 138.21 horas
+
+----- PUNTO 3 -----
+Cantidad de triángulos: 2486567
+Tiempo para calcular triángulos: 30.93 segundos
+
+----- PUNTO 4 -----
+Estimamos el diámetro del grafo basado en los caminos mínimos calculados para un subgrafo de 10.000 vértices.
+Estimación del diámetro del grafo: 99974
+
+----- PUNTO 5 -----
+Calculamos el PageRank haciendo 1000 random walks de longitud 100.
+PageRank de los 10 vértices más altos:  [('627251', 0.0024236217784604883), ('714416', 0.0023894862604540022), ('43792', 0.0020139955623826593), ('801924', 0.0018433179723502304), ('537039', 0.0018091824543437446), ('901396', 0.0017067759003242873), ('489319', 0.0017067759003242873), ('374550', 0.0017067759003242873), ('72375', 0.0017067759003242873), ('18791', 0.0017067759003242873)]
+Tiempo de ejecución de PageRank: 113.29 segundos
+
+----- PUNTO 6 -----
+Estimamos la circunferencia al calcular el ciclo más grande empezando por 100 vértices aleatorios
+Estimación de la circunferencia del grafo:  62652
+Tiempo de ejecución de la circunferencia: 105.33 segundos
+
+----- PUNTO EXTRA 2 -----
+Coeficiente de clustering promedio: 0.3578627216511033
+Tiempo de ejecución del coeficiente de clustering: 4.44 segundos

@@ -171,7 +171,7 @@ class Graph:
             current_vertex = queue.popleft()
 
             for neighbor in self.get_neighbors(current_vertex):
-                if distances[neighbor] == math.inf:  # if not visited
+                if distances[neighbor] == math.inf:
                     distances[neighbor] = distances[current_vertex] + 1
                     queue.append(neighbor)
 
